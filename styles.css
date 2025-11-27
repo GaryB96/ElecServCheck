@@ -995,6 +995,10 @@ body {
         top: 12px;
         right: 12px;
     }
+
+    .app-header h1 {
+        padding-right: 48px;
+    }
 }
 
 /* Print Styles */
