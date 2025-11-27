@@ -995,10 +995,6 @@ body {
         top: 12px;
         right: 12px;
     }
-
-    .app-header h1 {
-        padding-right: 48px;
-    }
 }
 
 /* Print Styles */
@@ -1137,6 +1133,10 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .app-header {
+        padding: 32px 60px 32px 20px;
+    }
+
     .app-header h1 {
         font-size: 20px;
     }
