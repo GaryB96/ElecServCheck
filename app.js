@@ -22,6 +22,20 @@ let appState = {
     finalAmps: 0
 };
 
+// Fetch and display version from service worker
+async function displayVersion() {
+    try {
+        const response = await fetch('service-worker.js');
+        const text = await response.text();
+        const match = text.match(/CACHE_NAME\s*=\s*['"].*?-v([\d.]+)['"]/i);
+        if (match && match[1]) {
+            document.getElementById('versionDisplay').textContent = `v${match[1]}`;
+        }
+    } catch (error) {
+        console.log('Could not fetch version:', error);
+    }
+}
+
 // DOM Elements
 const screen1 = document.getElementById('screen1');
 const screen2 = document.getElementById('screen2');
@@ -519,46 +533,55 @@ function showInstallPromotion() {
 
 // Show PDF Preview Modal
 function showPdfPreview() {
-    const modal = document.getElementById('pdfPreviewModal');
-    const iframe = document.getElementById('pdfPreviewFrame');
-    const screen3 = document.getElementById('screen3');
+    // Check if mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    // Clone screen3 content for PDF
-    const printContent = screen3.cloneNode(true);
-    printContent.style.display = 'block';
-    
-    // Create a complete HTML document for the PDF
-    const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <link rel="stylesheet" href="styles.css">
-            <style>
-                body { margin: 0; padding: 20px; background: white; }
-                @media print { body { padding: 0; } }
-            </style>
-        </head>
-        <body>
-            ${printContent.innerHTML}
-        </body>
-        </html>
-    `;
-    
-    // Create blob and object URL
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    // Set iframe source
-    iframe.src = url;
-    
-    // Show modal
-    modal.style.display = 'flex';
-    
-    // Setup event listeners
-    document.getElementById('closePdfBtn').onclick = closePdfPreview;
-    document.getElementById('closePdfFooterBtn').onclick = closePdfPreview;
-    document.getElementById('savePdfBtn').onclick = savePdf;
+    if (isMobile) {
+        // On mobile, just trigger print directly like before
+        window.print();
+    } else {
+        // On desktop, show modal preview
+        const modal = document.getElementById('pdfPreviewModal');
+        const iframe = document.getElementById('pdfPreviewFrame');
+        const screen3 = document.getElementById('screen3');
+        
+        // Clone screen3 content for PDF
+        const printContent = screen3.cloneNode(true);
+        printContent.style.display = 'block';
+        
+        // Create a complete HTML document for the PDF
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <link rel="stylesheet" href="styles.css">
+                <style>
+                    body { margin: 0; padding: 20px; background: white; }
+                    @media print { body { padding: 0; } }
+                </style>
+            </head>
+            <body>
+                ${printContent.innerHTML}
+            </body>
+            </html>
+        `;
+        
+        // Create blob and object URL
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        // Set iframe source
+        iframe.src = url;
+        
+        // Show modal
+        modal.style.display = 'flex';
+        
+        // Setup event listeners
+        document.getElementById('closePdfBtn').onclick = closePdfPreview;
+        document.getElementById('closePdfFooterBtn').onclick = closePdfPreview;
+        document.getElementById('savePdfBtn').onclick = savePdf;
+    }
 }
 
 // Close PDF Preview
@@ -614,4 +637,7 @@ function navigateToScreen(screenNumber) {
 }
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    init();
+    displayVersion();
+});
