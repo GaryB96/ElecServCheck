@@ -128,6 +128,28 @@ function init() {
         generateSummary();
         showPdfPreview();
     });
+
+    // Help modal event listeners
+    const infoBtn = document.getElementById('infoBtn');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelpBtn = document.getElementById('closeHelpBtn');
+
+    if (infoBtn && helpModal && closeHelpBtn) {
+        infoBtn.addEventListener('click', () => {
+            helpModal.style.display = 'flex';
+        });
+
+        closeHelpBtn.addEventListener('click', () => {
+            helpModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside content
+        helpModal.addEventListener('click', (e) => {
+            if (e.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
+    }
 }
 
 // Calculate Electrical Load

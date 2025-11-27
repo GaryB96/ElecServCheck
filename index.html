@@ -24,6 +24,7 @@
     <!-- Screen 1: Input Form -->
     <div id="screen1" class="screen active">
         <header class="app-header">
+            <button id="infoBtn" class="info-btn" title="Help & Information">ℹ️</button>
             <h1>⚡ Residential Electrical Service Checklist</h1>
             <p style="margin-top: 8px; opacity: 0.9; font-size: 14px;">Calculate electrical load based on 2024 Canadian Electrical Code</p>
             <p id="versionDisplay" style="margin-top: 4px; opacity: 0.5; font-size: 11px;">v1.1</p>
@@ -261,6 +262,97 @@
         <div class="pdf-preview-footer">
             <button id="savePdfBtn" class="btn btn-primary">Save</button>
             <button id="closePdfBtn" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="help-modal" style="display: none;">
+        <div class="help-modal-content">
+            <div class="help-modal-header">
+                <h2>⚡ Service Checklist</h2>
+                <button id="closeHelpBtn" class="close-help-btn">×</button>
+            </div>
+            <div class="help-modal-body">
+                <section class="help-section">
+                    <h3>🎯 What It Does</h3>
+                    <p>Service Checklist helps you quickly assess whether a residential property's electrical service is adequate based on square footage, appliances, and heating systems. Get instant results and generate a PDF report.</p>
+                </section>
+
+                <section class="help-section">
+                    <h3>✨ Key Features</h3>
+                    <ul>
+                        <li><strong>Smart Load Calculations</strong> - Automatically calculates approximate electrical load in amps</li>
+                        <li><strong>Canadian Code Compliant</strong> - Based on 2024 Canadian Electrical Code standards</li>
+                        <li><strong>Instant Assessment</strong> - Know immediately if a safety survey is required or recommended</li>
+                        <li><strong>PDF Reports</strong> - Generate and share professional reports</li>
+                        <li><strong>Works Offline</strong> - Install as an app and use anywhere</li>
+                        <li><strong>Mobile Optimized</strong> - Smooth experience on all devices</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>📱 Installation Guide</h3>
+                    
+                    <h4>Android</h4>
+                    <ol>
+                        <li>Look for the orange <strong>"Install App"</strong> banner at the top</li>
+                        <li>Tap <strong>"Install"</strong> button</li>
+                        <li>Or tap menu (⋮) → <strong>"Add to Home screen"</strong></li>
+                    </ol>
+
+                    <h4>iPhone/iPad</h4>
+                    <ol>
+                        <li>Tap the <strong>Share</strong> button (□ with arrow)</li>
+                        <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                        <li>Tap <strong>"Add"</strong> in the top right</li>
+                    </ol>
+
+                    <h4>Windows/Mac/Linux PC</h4>
+                    <ol>
+                        <li>Look for the <strong>install icon</strong> (⊕) in the address bar</li>
+                        <li>Click the icon and select <strong>"Install"</strong></li>
+                    </ol>
+                </section>
+
+                <section class="help-section">
+                    <h3>🚀 Quick Start</h3>
+                    
+                    <h4>Step 1: Enter Property Details</h4>
+                    <p>Policy number or name (optional), inspection date, service size (60, 100, or 200 Amps), and square footage.</p>
+
+                    <h4>Step 2: Check Equipment</h4>
+                    <p>Select which equipment is present: heat pumps, electric heating, water heater, range, pool/hot tub, dryer, kiln.</p>
+
+                    <h4>Step 3: Get Results</h4>
+                    <p>Tap <strong>"Calculate"</strong> to see assessment summary, approximate load, and whether a safety survey is needed.</p>
+
+                    <h4>Step 4: Generate PDF</h4>
+                    <p>Tap <strong>"Generate PDF"</strong> to preview and save/share the report.</p>
+                </section>
+
+                <section class="help-section">
+                    <h3>💡 Tips</h3>
+                    <ul>
+                        <li><strong>Accuracy Matters</strong> - Double-check all inputs</li>
+                        <li><strong>Multiple Heat Sources</strong> - Selecting multiple electric heating types will recommend a safety survey</li>
+                        <li><strong>Save Your Reports</strong> - PDFs are named automatically with policy info and date</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>📋 Assessment Criteria</h3>
+                    <ul>
+                        <li><strong>200A Service</strong>: Survey required >200A, recommended >170A</li>
+                        <li><strong>100A Service</strong>: Survey required >100A, recommended >85A</li>
+                        <li><strong>60A Service</strong>: Survey required >60A, recommended >50A</li>
+                    </ul>
+                </section>
+
+                <section class="help-section warning">
+                    <h3>⚠️ Important Note</h3>
+                    <p>This tool provides <strong>approximate</strong> electrical load calculations based on the information you provide. Users are not expected to be certified electricians. For complex situations or when recommended, always consult a qualified Safety Surveyor for a professional assessment.</p>
+                </section>
+            </div>
         </div>
     </div>
 

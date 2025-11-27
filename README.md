@@ -1,17 +1,17 @@
 # ⚡ Service Checklist
 
-A modern Progressive Web App (PWA) for calculating residential electrical service loads based on the 2024 Canadian Electrical Code.
+A Progressive Web App (PWA) for calculating residential electrical service loads based on the 2024 Canadian Electrical Code.
 
 ## 🎯 What It Does
 
-Service Checklist helps you quickly assess whether a residential property's electrical service is adequate based on square footage, appliances, and heating systems. Get instant results and generate professional PDF reports.
+Service Checklist helps you quickly assess whether a residential property's electrical service is adequate based on square footage, appliances, and heating systems. Get instant results and generate a PDF report.
 
 ## ✨ Key Features
 
 - **Smart Load Calculations** - Automatically calculates approximate electrical load in amps
 - **Canadian Code Compliant** - Based on 2024 Canadian Electrical Code standards
 - **Instant Assessment** - Know immediately if a safety survey is required or recommended
-- **PDF Reports** - Generate and share professional reports with policy details and inspection dates
+- **PDF Reports** - Generate and share professional reports with policyholder or others
 - **Works Offline** - Install as an app and use anywhere, even without internet
 - **Mobile Optimized** - Smooth experience on phones, tablets, and desktops
 
@@ -47,7 +47,7 @@ Service Checklist helps you quickly assess whether a residential property's elec
 - Policy number or name (optional)
 - Inspection date (defaults to today)
 - Service size (60, 100, or 200 Amps)
-- Square footage (main floor and basement)
+- Square footage (main floor required)
 
 ### Step 2: Check Equipment
 Select which equipment is present:
@@ -69,7 +69,7 @@ Tap **"Calculate"** to see:
 
 ### Step 4: Generate PDF
 Tap **"Generate PDF"** to:
-- Preview the professional report
+- Preview the report
 - **On PC**: Click "Save" to download (check your downloads folder)
 - **On Mobile**: Click "Save" to share/save via Android/iOS share menu
 
@@ -78,7 +78,6 @@ Tap **"Generate PDF"** to:
 - **Accuracy Matters** - Double-check all inputs for the most accurate assessment
 - **Multiple Heat Sources** - If you select multiple electric heating types, a safety survey will be recommended
 - **Save Your Reports** - PDFs are named automatically with your policy info and date
-- **Stay Current** - The app shows the version number at the bottom of the home screen
 
 ## 📋 Assessment Criteria
 
@@ -91,10 +90,6 @@ The app uses standard Canadian Electrical Code calculations:
 
 This tool provides **approximate** electrical load calculations based on the information you provide. Users are not expected to be certified electricians. For complex situations or when recommended, always consult a qualified Safety Surveyor for a professional assessment.
 
-## 🔄 Version
-
-Current version is displayed on the home screen and automatically syncs with app updates.
-
 ---
 
-**Need Help?** The app is designed to be intuitive, but if you have questions about electrical requirements, please consult a licensed electrician or Safety Surveyor.
+**Need Help?** The app is designed to be intuitive, but if you have questions about electrical requirements, please consult a Safety Surveyor.
