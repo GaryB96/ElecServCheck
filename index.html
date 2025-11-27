@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Residential Electrical Service Checklist - Calculate electrical load based on 2024 Canadian Electrical Code">
-    <meta name="theme-color" content="#0078d4">
+    <meta name="theme-color" content="#6366f1">
     <title>Residential Electrical Service Checklist</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
@@ -15,12 +15,17 @@
     <!-- Screen 1: Input Form -->
     <div id="screen1" class="screen active">
         <header class="app-header">
-            <h1>Residential Electrical Service Checklist</h1>
+            <h1>⚡ Residential Electrical Service Checklist</h1>
+            <p style="margin-top: 8px; opacity: 0.9; font-size: 14px;">Calculate electrical load based on 2024 Canadian Electrical Code</p>
         </header>
         
         <main class="main-content">
             <div class="form-container">
                 <!-- Service Size Selection -->
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 18px; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Select Service Size (Amps)</h2>
+                    <p style="font-size: 13px; color: var(--text-light);">Choose the electrical service capacity</p>
+                </div>
                 <div class="form-group radio-group">
                     <div class="radio-options">
                         <label class="radio-label">
@@ -62,7 +67,7 @@
 
                 <!-- Question 3a: Number of Heat Pumps -->
                 <div class="form-group nested" id="heatPumpsCount" style="display: none;">
-                    <label for="numHeatPumps">⤷ How many?</label>
+                    <label for="numHeatPumps">⤷ How many outdoor units are there?</label>
                     <select id="numHeatPumps">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -153,7 +158,8 @@
     <!-- Screen 2: Results -->
     <div id="screen2" class="screen">
         <header class="app-header">
-            <h1>Residential Electrical Service Checklist</h1>
+            <h1>⚡ Residential Electrical Service Checklist</h1>
+            <p style="margin-top: 8px; opacity: 0.9; font-size: 14px;">Calculation Results</p>
         </header>
         
         <main class="main-content">
@@ -180,6 +186,7 @@
     <div id="screen3" class="screen print-screen">
         <header class="print-header">
             <h1>Residential Electrical Service Checklist</h1>
+            <p style="margin: 4px 0 0 0; font-size: 12pt; color: #6b7280;">Based on 2024 Canadian Electrical Code</p>
         </header>
         
         <main class="main-content">
@@ -188,6 +195,10 @@
                 <p class="summary-service" id="summaryService"></p>
                 
                 <div class="summary-details" id="summaryDetails"></div>
+                
+                <div style="margin: 24px 0; padding: 0 0 16px 0; border-bottom: 2px solid #e5e7eb;">
+                    <h3 style="font-size: 14pt; font-weight: 700; color: #1f2937; margin-bottom: 8px;">Assessment Result</h3>
+                </div>
                 
                 <p class="summary-result" id="summaryResult"></p>
                 

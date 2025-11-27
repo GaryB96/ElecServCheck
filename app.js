@@ -206,34 +206,34 @@ function generateSummary() {
     // Details
     let detailsHTML = '';
     const fullSqFt = appState.mainFloorSqFt + appState.basementSqFt;
-    detailsHTML += `<div class="summary-item">Total square footage: ${fullSqFt} sq/f</div>`;
+    detailsHTML += `<div class="summary-item"><strong>Total square footage:</strong> ${fullSqFt} sq ft</div>`;
 
     if (appState.heatPumps) {
-        detailsHTML += `<div class="summary-item">Total heat pumps: ${appState.numHeatPumps}</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Heat pumps:</strong> ${appState.numHeatPumps} unit(s)</div>`;
     }
 
     if (appState.electricRadiators || appState.otherElectricHeat) {
-        detailsHTML += `<div class="summary-item">Additional electric heaters</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Additional electric heaters:</strong> Yes</div>`;
     }
 
     if (appState.electricWaterHeater) {
-        detailsHTML += `<div class="summary-item">Electric water heater</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Electric water heater:</strong> Yes</div>`;
     }
 
     if (appState.electricRange) {
-        detailsHTML += `<div class="summary-item">Electric range</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Electric range:</strong> Yes</div>`;
     }
 
     if (appState.poolHotTub) {
-        detailsHTML += `<div class="summary-item">Pool, hot tub, sauna, and/or vehicle charger present</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Pool/Hot tub/Sauna/Vehicle charger:</strong> Yes</div>`;
     }
 
     if (appState.clothesDryer) {
-        detailsHTML += `<div class="summary-item">Electric clothes dryer</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Electric clothes dryer:</strong> Yes</div>`;
     }
 
     if (appState.potteryKiln) {
-        detailsHTML += `<div class="summary-item">Electric pottery kiln</div>`;
+        detailsHTML += `<div class="summary-item"><strong>Electric pottery kiln:</strong> Yes</div>`;
     }
 
     summaryDetails.innerHTML = detailsHTML;
