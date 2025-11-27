@@ -607,11 +607,12 @@ async function showPdfPreview() {
         
         let viewer;
         if (isMobile) {
-            // For mobile, use object tag which works better
-            viewer = document.createElement('object');
-            viewer.data = pdfUrl;
-            viewer.type = 'application/pdf';
+            // For mobile, use iframe with blob URL
+            viewer = document.createElement('iframe');
+            viewer.src = pdfUrl;
             viewer.className = 'pdf-viewer';
+            // Allow fullscreen viewing on mobile
+            viewer.setAttribute('allowfullscreen', '');
         } else {
             // For desktop, use iframe
             viewer = document.createElement('iframe');
