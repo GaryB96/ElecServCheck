@@ -1,0 +1,20 @@
+# Ignore Power Apps source files
+extracted/
+*.msapp
+*.zip
+13558694230784684822.json
+N15bf2a83-fe8e-4be1-9816-990b3f808b42-logoSmallFile
+N8916cd71-c7e5-4887-8fd2-1ed04cb770f4-document.msapp
+Na41e58ea-3194-468e-8fdd-7b23776bd66e-identity.json
+document.zip
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

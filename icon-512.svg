@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#0078d4"/>
+  <g transform="translate(256.0, 256.0)">
+    <path d="M-20,-60 L-40,0 L-10,0 L-30,60 L30,-5 L0,-5 Z" fill="#ffffff" transform="scale(2.6666666666666665)"/>
+  </g>
+  <text x="256.0" y="492" font-family="Arial" font-size="34.13333333333333" fill="#ffffff" text-anchor="middle" font-weight="bold">⚡</text>
+</svg>

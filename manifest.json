@@ -1,0 +1,26 @@
+{
+  "name": "Residential Electrical Service Checklist",
+  "short_name": "Electrical Checklist",
+  "description": "Calculate electrical load based on 2024 Canadian Electrical Code for residential properties",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0078d4",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "tools"],
+  "screenshots": []
+}

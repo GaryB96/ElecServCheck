@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Residential Electrical Service Checklist - Calculate electrical load based on 2024 Canadian Electrical Code">
+    <meta name="theme-color" content="#0078d4">
+    <title>Residential Electrical Service Checklist</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+    <!-- Screen 1: Input Form -->
+    <div id="screen1" class="screen active">
+        <header class="app-header">
+            <h1>Residential Electrical Service Checklist</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="form-container">
+                <!-- Service Size Selection -->
+                <div class="form-group radio-group">
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="serviceSize" value="200" checked>
+                            <span>200</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="serviceSize" value="100">
+                            <span>100</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="serviceSize" value="60">
+                            <span>60</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 1: Square Footage -->
+                <div class="form-group">
+                    <label for="mainFloorSqFt">1. Main and upper floor square footage</label>
+                    <input type="number" id="mainFloorSqFt" min="0" placeholder="Enter sq ft">
+                </div>
+
+                <!-- Question 2: Basement Square Footage -->
+                <div class="form-group">
+                    <label for="basementSqFt">2. Total basement square footage</label>
+                    <input type="number" id="basementSqFt" min="0" placeholder="Enter sq ft">
+                </div>
+
+                <!-- Question 3: Heat Pumps -->
+                <div class="form-group">
+                    <label for="heatPumps">3. Are there any heat pumps?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="heatPumps">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 3a: Number of Heat Pumps -->
+                <div class="form-group nested" id="heatPumpsCount" style="display: none;">
+                    <label for="numHeatPumps">⤷ How many?</label>
+                    <select id="numHeatPumps">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <!-- Question 4: Electric Radiators -->
+                <div class="form-group">
+                    <label for="electricRadiators">4. Any electric radiators?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="electricRadiators">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 5: Other Electric Heat -->
+                <div class="form-group">
+                    <label for="otherElectricHeat">5. Any other electric heat?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="otherElectricHeat">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 6: Electric Water Heater -->
+                <div class="form-group">
+                    <label for="electricWaterHeater">6. Is the water heater electric?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="electricWaterHeater">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 7: Electric Range -->
+                <div class="form-group">
+                    <label for="electricRange">7. Is the range electric?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="electricRange">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 8: Pool/Hot Tub/Sauna/Vehicle Charger -->
+                <div class="form-group">
+                    <label for="poolHotTub">8. Is there a pool, hot tub, sauna, or vehicle charger?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="poolHotTub">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 9: Clothes Dryer -->
+                <div class="form-group">
+                    <label for="clothesDryer">9. Is there a clothes dryer?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="clothesDryer">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Question 10: Pottery Kiln -->
+                <div class="form-group">
+                    <label for="potteryKiln">10. Is there a pottery kiln?</label>
+                    <label class="toggle">
+                        <input type="checkbox" id="potteryKiln">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label"></span>
+                    </label>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-group">
+                    <button id="calculateBtn" class="btn btn-primary">Calculate</button>
+                    <button id="resetBtn" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen 2: Results -->
+    <div id="screen2" class="screen">
+        <header class="app-header">
+            <h1>Residential Electrical Service Checklist</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="results-container">
+                <div id="resultMessage" class="result-message"></div>
+                
+                <div class="button-group">
+                    <button id="backBtn" class="btn btn-primary">Back</button>
+                    <button id="printSummaryBtn" class="btn btn-primary desktop-only">Print Summary</button>
+                </div>
+
+                <div id="contactMessage" class="contact-message" style="display: none;">
+                    <p><strong>For an accurate load test, photos of nameplates from all heating and major appliances must be provided. Ensure nameplate shows either AMPS or WATTS</strong></p>
+                </div>
+
+                <div class="disclaimer">
+                    <p><em>Disclaimer: This checklist is intended for standard single-family dwellings only. It does not apply to multi-unit or commercial buildings. The appliances listed in Question 8 can significantly impact the calculated load. If more than one appliance from Question 8 is present, if you are uncertain about any part of this assessment or have questions regarding your specific situation, please contact a Safety Surveyor for further guidance.</em></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen 3: Print Summary -->
+    <div id="screen3" class="screen print-screen">
+        <header class="print-header">
+            <h1>Residential Electrical Service Checklist</h1>
+        </header>
+        
+        <main class="main-content">
+            <div class="summary-container">
+                <p class="summary-date" id="summaryDate"></p>
+                <p class="summary-service" id="summaryService"></p>
+                
+                <div class="summary-details" id="summaryDetails"></div>
+                
+                <p class="summary-result" id="summaryResult"></p>
+                
+                <div class="disclaimer">
+                    <p><em>Disclaimer: This checklist is intended for standard single-family dwellings only. It does not apply to multi-unit or commercial buildings. The appliances listed in Question 8 can significantly impact the calculated load. If more than one appliance from Question 8 is present, if you are uncertain about any part of this assessment or have questions regarding your specific situation, please contact a Safety Surveyor for further guidance.</em></p>
+                </div>
+
+                <div class="button-group no-print">
+                    <button id="mainScreenBtn" class="btn btn-primary">Main Screen</button>
+                    <button id="printBtn" class="btn btn-primary">Print</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
