@@ -531,91 +531,131 @@ function showInstallPromotion() {
     });
 }
 
-// Show PDF Preview Modal
-function showPdfPreview() {
-    // Check if mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+// Global variable to store PDF blob
+let currentPdfBlob = null;
+
+// Show PDF Preview
+async function showPdfPreview() {
+    const screen3 = document.getElementById('screen3');
+    const previewScreen = document.getElementById('pdfPreviewScreen');
+    const embed = document.getElementById('pdfPreviewEmbed');
     
-    if (isMobile) {
-        // On mobile, just trigger print directly like before
-        window.print();
-    } else {
-        // On desktop, show modal preview
-        const modal = document.getElementById('pdfPreviewModal');
-        const iframe = document.getElementById('pdfPreviewFrame');
-        const screen3 = document.getElementById('screen3');
+    // Show loading state
+    previewScreen.style.display = 'flex';
+    embed.style.display = 'none';
+    
+    try {
+        // Generate PDF using html2canvas and jsPDF
+        const { jsPDF } = window.jspdf;
         
-        // Clone screen3 content for PDF
-        const printContent = screen3.cloneNode(true);
-        printContent.style.display = 'block';
+        // Temporarily show screen3 for capture
+        screen3.style.display = 'block';
+        screen3.style.position = 'absolute';
+        screen3.style.left = '-9999px';
         
-        // Create a complete HTML document for the PDF
-        const htmlContent = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <link rel="stylesheet" href="styles.css">
-                <style>
-                    body { margin: 0; padding: 20px; background: white; }
-                    @media print { body { padding: 0; } }
-                </style>
-            </head>
-            <body>
-                ${printContent.innerHTML}
-            </body>
-            </html>
-        `;
+        // Capture the content
+        const canvas = await html2canvas(screen3, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
         
-        // Create blob and object URL
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
+        // Hide screen3 again
+        screen3.style.display = 'none';
+        screen3.style.position = '';
+        screen3.style.left = '';
         
-        // Set iframe source
-        iframe.src = url;
+        // Create PDF
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'letter'
+        });
         
-        // Show modal
-        modal.style.display = 'flex';
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
-        // Setup event listeners
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        
+        // Get PDF as blob
+        currentPdfBlob = pdf.output('blob');
+        const pdfUrl = URL.createObjectURL(currentPdfBlob);
+        
+        // Display PDF in embed
+        embed.src = pdfUrl;
+        embed.style.display = 'block';
+        
+        // Setup button listeners
         document.getElementById('closePdfBtn').onclick = closePdfPreview;
-        document.getElementById('closePdfFooterBtn').onclick = closePdfPreview;
         document.getElementById('savePdfBtn').onclick = savePdf;
+        
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        alert('Error generating PDF preview');
+        closePdfPreview();
     }
 }
 
 // Close PDF Preview
 function closePdfPreview() {
-    const modal = document.getElementById('pdfPreviewModal');
-    const iframe = document.getElementById('pdfPreviewFrame');
+    const previewScreen = document.getElementById('pdfPreviewScreen');
+    const embed = document.getElementById('pdfPreviewEmbed');
     
-    modal.style.display = 'none';
+    previewScreen.style.display = 'none';
     
-    // Clean up blob URL
-    if (iframe.src) {
-        URL.revokeObjectURL(iframe.src);
-        iframe.src = '';
+    // Clean up
+    if (embed.src) {
+        URL.revokeObjectURL(embed.src);
+        embed.src = '';
     }
+    currentPdfBlob = null;
 }
 
 // Save/Share PDF
 async function savePdf() {
-    const iframe = document.getElementById('pdfPreviewFrame');
+    if (!currentPdfBlob) return;
+    
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const fileName = `Electrical_Service_Checklist_${appState.policyName || 'Report'}_${new Date().toISOString().split('T')[0]}.pdf`;
     
     try {
-        // Trigger print from iframe which allows save as PDF
-        iframe.contentWindow.print();
-        
-        // If Web Share API is available and we have a file to share
-        if (navigator.share && navigator.canShare) {
-            // Note: Actual PDF generation would require a library like jsPDF
-            // For now, we'll use the print dialog which allows "Save as PDF"
-            // Future enhancement: Generate actual PDF blob and use Web Share API
+        if (isMobile && navigator.share && navigator.canShare) {
+            // Mobile: Use Web Share API
+            const file = new File([currentPdfBlob], fileName, { type: 'application/pdf' });
+            
+            if (navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Electrical Service Checklist',
+                    text: 'Electrical Service Assessment Report'
+                });
+                return;
+            }
         }
+        
+        // Desktop or fallback: Direct download
+        const url = URL.createObjectURL(currentPdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
     } catch (error) {
         console.error('Error saving PDF:', error);
-        // Fallback to print
-        iframe.contentWindow.print();
+        // Fallback to download
+        const url = URL.createObjectURL(currentPdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 }
 

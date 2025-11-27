@@ -17,6 +17,8 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <!-- Screen 1: Input Form -->
@@ -248,20 +250,17 @@
         </main>
     </div>
 
-    <!-- PDF Preview Modal -->
-    <div id="pdfPreviewModal" class="pdf-preview-modal" style="display: none;">
-        <div class="pdf-preview-content">
-            <div class="pdf-preview-header">
-                <h2>PDF Preview</h2>
-                <button id="closePdfBtn" class="close-pdf-btn">×</button>
-            </div>
-            <div class="pdf-preview-body">
-                <iframe id="pdfPreviewFrame" class="pdf-preview-frame"></iframe>
-            </div>
-            <div class="pdf-preview-footer">
-                <button id="savePdfBtn" class="btn btn-primary">Save</button>
-                <button id="closePdfFooterBtn" class="btn btn-secondary">Close</button>
-            </div>
+    <!-- PDF Preview Screen -->
+    <div id="pdfPreviewScreen" class="pdf-preview-screen" style="display: none;">
+        <div class="pdf-preview-header">
+            <h2>PDF Preview</h2>
+        </div>
+        <div class="pdf-preview-body">
+            <embed id="pdfPreviewEmbed" type="application/pdf" class="pdf-preview-embed" />
+        </div>
+        <div class="pdf-preview-footer">
+            <button id="savePdfBtn" class="btn btn-primary">Save</button>
+            <button id="closePdfBtn" class="btn btn-secondary">Close</button>
         </div>
     </div>
 
