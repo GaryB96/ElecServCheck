@@ -538,13 +538,18 @@ let currentPdfBlob = null;
 async function showPdfPreview() {
     const screen3 = document.getElementById('screen3');
     const previewScreen = document.getElementById('pdfPreviewScreen');
-    const iframe = document.getElementById('pdfPreviewFrame');
+    const previewBody = document.getElementById('pdfPreviewBody');
     const loadingIndicator = document.getElementById('pdfLoadingIndicator');
     
     // Show loading state
     previewScreen.style.display = 'flex';
     loadingIndicator.style.display = 'flex';
-    iframe.style.display = 'none';
+    
+    // Clear any existing preview
+    const existingViewer = previewBody.querySelector('.pdf-viewer');
+    if (existingViewer) {
+        existingViewer.remove();
+    }
     
     try {
         // Check if jsPDF is loaded
@@ -597,21 +602,26 @@ async function showPdfPreview() {
         currentPdfBlob = pdf.output('blob');
         const pdfUrl = URL.createObjectURL(currentPdfBlob);
         
-        // Check if mobile device
+        // Create appropriate viewer element
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
+        let viewer;
         if (isMobile) {
-            // On mobile, create a data URI and use iframe
-            const pdfDataUri = pdf.output('datauristring');
-            iframe.src = pdfDataUri;
+            // For mobile, use object tag which works better
+            viewer = document.createElement('object');
+            viewer.data = pdfUrl;
+            viewer.type = 'application/pdf';
+            viewer.className = 'pdf-viewer';
         } else {
-            // On desktop, use blob URL
-            iframe.src = pdfUrl;
+            // For desktop, use iframe
+            viewer = document.createElement('iframe');
+            viewer.src = pdfUrl;
+            viewer.className = 'pdf-viewer';
         }
         
-        // Hide loading, show iframe
+        // Hide loading, show viewer
         loadingIndicator.style.display = 'none';
-        iframe.style.display = 'block';
+        previewBody.appendChild(viewer);
         
         // Setup button listeners
         document.getElementById('closePdfBtn').onclick = closePdfPreview;
@@ -627,14 +637,17 @@ async function showPdfPreview() {
 // Close PDF Preview
 function closePdfPreview() {
     const previewScreen = document.getElementById('pdfPreviewScreen');
-    const iframe = document.getElementById('pdfPreviewFrame');
+    const previewBody = document.getElementById('pdfPreviewBody');
     
     previewScreen.style.display = 'none';
     
-    // Clean up
-    if (iframe.src) {
-        URL.revokeObjectURL(iframe.src);
-        iframe.src = '';
+    // Clean up viewer
+    const viewer = previewBody.querySelector('.pdf-viewer');
+    if (viewer) {
+        if (viewer.src || viewer.data) {
+            URL.revokeObjectURL(viewer.src || viewer.data);
+        }
+        viewer.remove();
     }
     currentPdfBlob = null;
 }
@@ -668,40 +681,46 @@ async function savePdf() {
                     title: 'Electrical Service Checklist',
                     text: 'Electrical Service Assessment Report'
                 });
+                // Share completed successfully, return without downloading
                 return;
             }
         }
         
-        // Desktop or fallback: Direct download
-        const url = URL.createObjectURL(currentPdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        // Show toast notification on desktop
+        // Desktop: Direct download
         if (!isMobile) {
+            const url = URL.createObjectURL(currentPdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Show toast notification on desktop
             showToast('Check your downloads folder');
         }
         
     } catch (error) {
-        console.error('Error saving PDF:', error);
-        // Fallback to download
-        const url = URL.createObjectURL(currentPdfBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        if (!isMobile) {
-            showToast('Check your downloads folder');
+        // Only download if there was an actual error (not user cancellation)
+        if (error.name !== 'AbortError') {
+            console.error('Error saving PDF:', error);
+            
+            // Fallback to download
+            const url = URL.createObjectURL(currentPdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            if (!isMobile) {
+                showToast('Check your downloads folder');
+            }
         }
+        // If AbortError (user cancelled), do nothing
     }
 }
 
