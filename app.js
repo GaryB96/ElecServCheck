@@ -531,6 +531,7 @@ function navigateToScreen(screenNumber) {
         screen1.classList.add('active');
     } else if (screenNumber === 2) {
         screen2.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (screenNumber === 3) {
         generateSummary();
         screen3.classList.add('active');
