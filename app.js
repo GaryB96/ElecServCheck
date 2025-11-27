@@ -600,21 +600,20 @@ async function showPdfPreview() {
         
         // Get PDF as blob
         currentPdfBlob = pdf.output('blob');
-        const pdfUrl = URL.createObjectURL(currentPdfBlob);
         
         // Create appropriate viewer element
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
         let viewer;
         if (isMobile) {
-            // For mobile, use iframe with blob URL
-            viewer = document.createElement('iframe');
-            viewer.src = pdfUrl;
-            viewer.className = 'pdf-viewer';
-            // Allow fullscreen viewing on mobile
-            viewer.setAttribute('allowfullscreen', '');
+            // For mobile, display the captured image directly instead of PDF
+            viewer = document.createElement('img');
+            viewer.src = imgData;
+            viewer.className = 'pdf-viewer pdf-image-viewer';
+            viewer.alt = 'PDF Preview';
         } else {
-            // For desktop, use iframe
+            // For desktop, use iframe with PDF
+            const pdfUrl = URL.createObjectURL(currentPdfBlob);
             viewer = document.createElement('iframe');
             viewer.src = pdfUrl;
             viewer.className = 'pdf-viewer';
