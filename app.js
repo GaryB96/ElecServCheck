@@ -486,13 +486,13 @@ function showInstallPromotion() {
     const banner = document.createElement('div');
     banner.id = 'installBanner';
     banner.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-            <div style="flex: 1;">
-                <p style="margin: 0; font-weight: 600; font-size: 14px;">⚡ Install App</p>
-                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Add to home screen for quick access</p>
+        <div class="install-banner-content">
+            <button id="dismissInstallBtn" class="dismiss-btn">×</button>
+            <div class="install-text">
+                <p class="install-title">⚡ Install App</p>
+                <p class="install-subtitle">Add to home screen for quick access</p>
             </div>
-            <button id="installBtn" class="btn btn-primary" style="padding: 8px 20px; font-size: 13px; white-space: nowrap;">Install</button>
-            <button id="dismissInstallBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 20px; padding: 4px 8px;">×</button>
+            <button id="installBtn" class="btn btn-primary install-action-btn">Install</button>
         </div>
     `;
     document.body.appendChild(banner);
