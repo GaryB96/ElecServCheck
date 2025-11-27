@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Residential Electrical Service Checklist - Calculate electrical load based on 2024 Canadian Electrical Code">
     <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Service Checklist">
@@ -180,13 +181,31 @@
             <div class="results-container">
                 <div id="resultMessage" class="result-message"></div>
                 
-                <div class="button-group">
-                    <button id="backBtn" class="btn btn-primary">Back</button>
-                    <button id="printSummaryBtn" class="btn btn-primary desktop-only">Print Summary</button>
-                </div>
-
                 <div id="contactMessage" class="contact-message" style="display: none;">
                     <p><strong>For an accurate load test, photos of nameplates from all heating and major appliances must be provided. Ensure nameplate shows either AMPS or WATTS</strong></p>
+                </div>
+
+                <!-- Assessment Details Section -->
+                <div id="assessmentDetails" style="margin: 24px 0;">
+                    <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 2px solid var(--border-color);">
+                        <h3 style="font-size: 18px; font-weight: 700; color: var(--text-color); margin-bottom: 8px; text-align: center;">Assessment Details</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 15px; margin: 8px 0; font-weight: 600;"><strong>Service Size:</strong> <span id="displayServiceSize"></span></p>
+                        <p style="font-size: 15px; margin: 8px 0; font-weight: 600;"><strong>Total Square Footage:</strong> <span id="displaySqFt"></span></p>
+                    </div>
+                    
+                    <div id="resultSummaryDetails" style="background: var(--background-secondary); border-radius: 12px; padding: 16px; margin-bottom: 16px;"></div>
+                    
+                    <div style="margin-top: 16px; padding: 16px; background: var(--background-secondary); border-radius: 12px; border-left: 4px solid var(--primary-color);">
+                        <p id="detailedResult" style="font-size: 15px; line-height: 1.6; color: var(--text-color);"></p>
+                    </div>
+                </div>
+                
+                <div class="button-group no-print">
+                    <button id="backBtn" class="btn btn-primary">Back</button>
+                    <button id="printSummaryBtn" class="btn btn-primary">Generate PDF</button>
                 </div>
 
                 <div class="disclaimer">
@@ -196,8 +215,8 @@
         </main>
     </div>
 
-    <!-- Screen 3: Print Summary -->
-    <div id="screen3" class="screen print-screen">
+    <!-- Hidden Print Summary (Only shows when printing) -->
+    <div id="screen3" class="screen print-screen" style="display: none;">
         <header class="print-header">
             <h1>Residential Electrical Service Checklist</h1>
             <p style="margin: 4px 0 0 0; font-size: 12pt; color: #6b7280;">Based on 2024 Canadian Electrical Code</p>
@@ -220,11 +239,6 @@
                 
                 <div class="disclaimer">
                     <p><em>Disclaimer: This checklist is intended for standard single-family dwellings only. It does not apply to multi-unit or commercial buildings. The appliances listed in Question 8 can significantly impact the calculated load. If more than one appliance from Question 8 is present, if you are uncertain about any part of this assessment or have questions regarding your specific situation, please contact a Safety Surveyor for further guidance.</em></p>
-                </div>
-
-                <div class="button-group no-print">
-                    <button id="mainScreenBtn" class="btn btn-primary">Main Screen</button>
-                    <button id="printBtn" class="btn btn-primary">Print</button>
                 </div>
             </div>
         </main>

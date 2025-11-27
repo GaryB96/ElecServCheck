@@ -49,8 +49,6 @@ const calculateBtn = document.getElementById('calculateBtn');
 const resetBtn = document.getElementById('resetBtn');
 const backBtn = document.getElementById('backBtn');
 const printSummaryBtn = document.getElementById('printSummaryBtn');
-const mainScreenBtn = document.getElementById('mainScreenBtn');
-const printBtn = document.getElementById('printBtn');
 
 // Result Elements
 const resultMessage = document.getElementById('resultMessage');
@@ -112,9 +110,14 @@ function init() {
     calculateBtn.addEventListener('click', calculateLoad);
     resetBtn.addEventListener('click', resetForm);
     backBtn.addEventListener('click', () => navigateToScreen(1));
-    printSummaryBtn.addEventListener('click', () => navigateToScreen(3));
-    mainScreenBtn.addEventListener('click', () => navigateToScreen(1));
-    printBtn.addEventListener('click', printSummary);
+    printSummaryBtn.addEventListener('click', () => {
+        // Populate screen 3 with summary data
+        generateSummary();
+        // Trigger print dialog
+        setTimeout(() => {
+            window.print();
+        }, 100);
+    });
 }
 
 // Calculate Electrical Load
@@ -180,37 +183,59 @@ function calculateLoad() {
 function displayResults() {
     let message = '';
     let shouldContactSurveyor = false;
+    let detailedMessage = '';
 
     // Check if multiple heat sources require surveyor contact
     if (appState.heatPumps && (appState.electricRadiators || appState.otherElectricHeat)) {
         message = 'Contact Safety Surveyor';
         shouldContactSurveyor = true;
+        detailedMessage = `Based on the information provided, the approximate load is ${appState.finalAmps.toFixed(1)} amps. However, due to the multiple sources of electric heat, a safety survey is recommended.`;
     } else if ((appState.serviceSize === 100 || appState.serviceSize === 60) && 
                (appState.electricRadiators || appState.otherElectricHeat)) {
         message = 'Contact Safety Surveyor';
         shouldContactSurveyor = true;
+        detailedMessage = `Based on the information provided, the approximate load is ${appState.finalAmps.toFixed(1)} amps. However, due to the multiple sources of electric heat, a safety survey is recommended.`;
     } else {
         // Calculate based on service size
+        const ampsFormatted = appState.finalAmps.toFixed(1);
         if (appState.serviceSize === 200) {
-            if (appState.finalAmps > 170) {
+            if (appState.finalAmps > 200) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+            } else if (appState.finalAmps > 170) {
+                message = 'Safety Survey Recommended';
+                shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 200 Amps.';
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 100) {
-            if (appState.finalAmps > 85) {
+            if (appState.finalAmps > 100) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+            } else if (appState.finalAmps > 85) {
+                message = 'Safety Survey Recommended';
+                shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 100 Amps.';
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 60) {
-            if (appState.finalAmps > 50) {
+            if (appState.finalAmps > 60) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+            } else if (appState.finalAmps > 50) {
+                message = 'Safety Survey Recommended';
+                shouldContactSurveyor = true;
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 60 Amps.';
+                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         }
     }
@@ -218,11 +243,73 @@ function displayResults() {
     resultMessage.textContent = message;
     resultMessage.className = shouldContactSurveyor ? 'result-message error' : 'result-message success';
     contactMessage.style.display = shouldContactSurveyor ? 'block' : 'none';
+    
+    // Set detailed result message
+    document.getElementById('detailedResult').textContent = detailedMessage;
+    
+    // Generate assessment details for screen 2
+    generateAssessmentDetails();
+}
+
+// Generate assessment details for display on screen 2
+function generateAssessmentDetails() {
+    const resultSummaryDetails = document.getElementById('resultSummaryDetails');
+    const displayServiceSize = document.getElementById('displayServiceSize');
+    const displaySqFt = document.getElementById('displaySqFt');
+    
+    // Safety check
+    if (!resultSummaryDetails || !displayServiceSize || !displaySqFt) {
+        console.error('Assessment detail elements not found');
+        return;
+    }
+    
+    const fullSqFt = appState.mainFloorSqFt + appState.basementSqFt;
+    
+    // Update service size and square footage
+    displayServiceSize.textContent = `${appState.serviceSize} Amps`;
+    displaySqFt.textContent = `${fullSqFt} sq ft`;
+    
+    let detailsHTML = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+
+    if (appState.heatPumps) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Heat pumps:</strong> ${appState.numHeatPumps} unit(s)</div>`;
+    }
+
+    if (appState.electricRadiators || appState.otherElectricHeat) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Additional electric heaters:</strong> Yes</div>`;
+    }
+
+    if (appState.electricWaterHeater) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Electric water heater:</strong> Yes</div>`;
+    }
+
+    if (appState.electricRange) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Electric range:</strong> Yes</div>`;
+    }
+
+    if (appState.poolHotTub) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Pool/Hot tub/Sauna/Vehicle charger:</strong> Yes</div>`;
+    }
+
+    if (appState.clothesDryer) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Electric clothes dryer:</strong> Yes</div>`;
+    }
+
+    if (appState.potteryKiln) {
+        detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Electric pottery kiln:</strong> Yes</div>`;
+    }
+    
+    detailsHTML += `<div style="padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid var(--primary-color);"><strong style="font-size: 17px;">Calculated Load:</strong> <span style="font-size: 20px; color: var(--primary-color); font-weight: 700;">${appState.finalAmps.toFixed(1)} Amps</span></div>`;
+    
+    detailsHTML += '</div>';
+    
+    resultSummaryDetails.innerHTML = detailsHTML;
+    
+    console.log('Assessment details generated successfully');
 }
 
 // Generate Summary for Screen 3
 function generateSummary() {
-    const summaryDate = document.getElementById('summaryDate');
     const summaryService = document.getElementById('summaryService');
     const summaryDetails = document.getElementById('summaryDetails');
     const summaryResult = document.getElementById('summaryResult');
@@ -247,10 +334,11 @@ function generateSummary() {
         summaryInspectionDate.style.display = 'none';
     }
 
-    // Date Generated
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    summaryDate.textContent = `Date Generated: ${dateStr}`;
+    // Hide Date Generated field
+    const summaryDateElement = document.getElementById('summaryDate');
+    if (summaryDateElement) {
+        summaryDateElement.style.display = 'none';
+    }
 
     // Service Size
     summaryService.textContent = `Service Size: ${appState.serviceSize} Amps`;
