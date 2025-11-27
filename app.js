@@ -1,5 +1,7 @@
 // Application State
 let appState = {
+    policyName: '',
+    inspectionDate: '',
     serviceSize: 200,
     mainFloorSqFt: 0,
     basementSqFt: 0,
@@ -26,6 +28,8 @@ const screen2 = document.getElementById('screen2');
 const screen3 = document.getElementById('screen3');
 
 // Input Elements
+const policyNameInput = document.getElementById('policyName');
+const inspectionDateInput = document.getElementById('inspectionDate');
 const serviceSizeRadios = document.querySelectorAll('input[name="serviceSize"]');
 const mainFloorInput = document.getElementById('mainFloorSqFt');
 const basementInput = document.getElementById('basementSqFt');
@@ -54,6 +58,12 @@ const contactMessage = document.getElementById('contactMessage');
 
 // Initialize App
 function init() {
+    // Set default inspection date to today
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    inspectionDateInput.value = dateStr;
+    appState.inspectionDate = dateStr;
+
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
@@ -62,6 +72,14 @@ function init() {
     }
 
     // Event Listeners
+    policyNameInput.addEventListener('input', (e) => {
+        appState.policyName = e.target.value;
+    });
+
+    inspectionDateInput.addEventListener('change', (e) => {
+        appState.inspectionDate = e.target.value;
+    });
+
     serviceSizeRadios.forEach(radio => {
         radio.addEventListener('change', (e) => {
             appState.serviceSize = parseInt(e.target.value);
@@ -195,10 +213,30 @@ function generateSummary() {
     const summaryDetails = document.getElementById('summaryDetails');
     const summaryResult = document.getElementById('summaryResult');
 
-    // Date
+    // Policy Name
+    const summaryPolicy = document.getElementById('summaryPolicy');
+    if (appState.policyName) {
+        summaryPolicy.textContent = `Policy # or Name: ${appState.policyName}`;
+        summaryPolicy.style.display = 'block';
+    } else {
+        summaryPolicy.style.display = 'none';
+    }
+
+    // Inspection Date
+    const summaryInspectionDate = document.getElementById('summaryInspectionDate');
+    if (appState.inspectionDate) {
+        const inspDate = new Date(appState.inspectionDate + 'T00:00:00');
+        const inspDateStr = inspDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        summaryInspectionDate.textContent = `Inspection Date: ${inspDateStr}`;
+        summaryInspectionDate.style.display = 'block';
+    } else {
+        summaryInspectionDate.style.display = 'none';
+    }
+
+    // Date Generated
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    summaryDate.textContent = `Date: ${dateStr}`;
+    summaryDate.textContent = `Date Generated: ${dateStr}`;
 
     // Service Size
     summaryService.textContent = `Service Size: ${appState.serviceSize} Amps`;
@@ -285,6 +323,10 @@ function printSummary() {
 
 // Reset Form
 function resetForm() {
+    // Reset text and date inputs
+    policyNameInput.value = '';
+    inspectionDateInput.value = '';
+
     // Reset radio buttons
     serviceSizeRadios[0].checked = true;
     appState.serviceSize = 200;
@@ -311,6 +353,8 @@ function resetForm() {
 
     // Reset state
     appState = {
+        policyName: '',
+        inspectionDate: '',
         serviceSize: 200,
         mainFloorSqFt: 0,
         basementSqFt: 0,
