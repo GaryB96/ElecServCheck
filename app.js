@@ -56,6 +56,9 @@ const printBtn = document.getElementById('printBtn');
 const resultMessage = document.getElementById('resultMessage');
 const contactMessage = document.getElementById('contactMessage');
 
+// PWA Install Prompt
+let deferredPrompt;
+
 // Initialize App
 function init() {
     // Set default inspection date to today
@@ -63,6 +66,17 @@ function init() {
     const dateStr = today.toISOString().split('T')[0];
     inspectionDateInput.value = dateStr;
     appState.inspectionDate = dateStr;
+
+    // Capture the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        console.log('Install prompt available');
+        // Show install button/banner if desired
+        showInstallPromotion();
+    });
 
     // Service Worker Registration
     if ('serviceWorker' in navigator) {
@@ -374,6 +388,49 @@ function resetForm() {
         totalWatts: 0,
         finalAmps: 0
     };
+}
+
+// Show install promotion
+function showInstallPromotion() {
+    // Create install banner if it doesn't exist
+    if (document.getElementById('installBanner')) return;
+    
+    const banner = document.createElement('div');
+    banner.id = 'installBanner';
+    banner.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="flex: 1;">
+                <p style="margin: 0; font-weight: 600; font-size: 14px;">⚡ Install App</p>
+                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Add to home screen for quick access</p>
+            </div>
+            <button id="installBtn" class="btn btn-primary" style="padding: 8px 20px; font-size: 13px; white-space: nowrap;">Install</button>
+            <button id="dismissInstallBtn" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 20px; padding: 4px 8px;">×</button>
+        </div>
+    `;
+    document.body.appendChild(banner);
+    
+    // Add click handler for install button
+    document.getElementById('installBtn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        
+        // Show the install prompt
+        deferredPrompt.prompt();
+        
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response: ${outcome}`);
+        
+        // Clear the deferredPrompt
+        deferredPrompt = null;
+        
+        // Hide the banner
+        banner.remove();
+    });
+    
+    // Dismiss button
+    document.getElementById('dismissInstallBtn').addEventListener('click', () => {
+        banner.remove();
+    });
 }
 
 // Navigate Between Screens
