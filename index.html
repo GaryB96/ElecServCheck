@@ -248,6 +248,23 @@
         </main>
     </div>
 
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="pdf-preview-modal" style="display: none;">
+        <div class="pdf-preview-content">
+            <div class="pdf-preview-header">
+                <h2>PDF Preview</h2>
+                <button id="closePdfBtn" class="close-pdf-btn">×</button>
+            </div>
+            <div class="pdf-preview-body">
+                <iframe id="pdfPreviewFrame" class="pdf-preview-frame"></iframe>
+            </div>
+            <div class="pdf-preview-footer">
+                <button id="savePdfBtn" class="btn btn-primary">Save</button>
+                <button id="closePdfFooterBtn" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

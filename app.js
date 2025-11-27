@@ -111,12 +111,8 @@ function init() {
     resetBtn.addEventListener('click', resetForm);
     backBtn.addEventListener('click', () => navigateToScreen(1));
     printSummaryBtn.addEventListener('click', () => {
-        // Populate screen 3 with summary data
         generateSummary();
-        // Trigger print dialog
-        setTimeout(() => {
-            window.print();
-        }, 100);
+        showPdfPreview();
     });
 }
 
@@ -519,6 +515,85 @@ function showInstallPromotion() {
     document.getElementById('dismissInstallBtn').addEventListener('click', () => {
         banner.remove();
     });
+}
+
+// Show PDF Preview Modal
+function showPdfPreview() {
+    const modal = document.getElementById('pdfPreviewModal');
+    const iframe = document.getElementById('pdfPreviewFrame');
+    const screen3 = document.getElementById('screen3');
+    
+    // Clone screen3 content for PDF
+    const printContent = screen3.cloneNode(true);
+    printContent.style.display = 'block';
+    
+    // Create a complete HTML document for the PDF
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <link rel="stylesheet" href="styles.css">
+            <style>
+                body { margin: 0; padding: 20px; background: white; }
+                @media print { body { padding: 0; } }
+            </style>
+        </head>
+        <body>
+            ${printContent.innerHTML}
+        </body>
+        </html>
+    `;
+    
+    // Create blob and object URL
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    // Set iframe source
+    iframe.src = url;
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Setup event listeners
+    document.getElementById('closePdfBtn').onclick = closePdfPreview;
+    document.getElementById('closePdfFooterBtn').onclick = closePdfPreview;
+    document.getElementById('savePdfBtn').onclick = savePdf;
+}
+
+// Close PDF Preview
+function closePdfPreview() {
+    const modal = document.getElementById('pdfPreviewModal');
+    const iframe = document.getElementById('pdfPreviewFrame');
+    
+    modal.style.display = 'none';
+    
+    // Clean up blob URL
+    if (iframe.src) {
+        URL.revokeObjectURL(iframe.src);
+        iframe.src = '';
+    }
+}
+
+// Save/Share PDF
+async function savePdf() {
+    const iframe = document.getElementById('pdfPreviewFrame');
+    
+    try {
+        // Trigger print from iframe which allows save as PDF
+        iframe.contentWindow.print();
+        
+        // If Web Share API is available and we have a file to share
+        if (navigator.share && navigator.canShare) {
+            // Note: Actual PDF generation would require a library like jsPDF
+            // For now, we'll use the print dialog which allows "Save as PDF"
+            // Future enhancement: Generate actual PDF blob and use Web Share API
+        }
+    } catch (error) {
+        console.error('Error saving PDF:', error);
+        // Fallback to print
+        iframe.contentWindow.print();
+    }
 }
 
 // Navigate Between Screens
