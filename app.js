@@ -212,40 +212,40 @@ function displayResults() {
             if (appState.finalAmps > 200) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 170) {
                 message = 'Safety Survey Recommended';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 200 Amps.';
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 100) {
             if (appState.finalAmps > 100) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 85) {
                 message = 'Safety Survey Recommended';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 100 Amps.';
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 60) {
             if (appState.finalAmps > 60) {
                 message = 'Contact Safety Surveyor';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 50) {
                 message = 'Safety Survey Recommended';
                 shouldContactSurveyor = true;
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
                 message = 'Load is less than 60 Amps.';
-                detailedMessage = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                detailedMessage = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         }
     }
@@ -309,7 +309,7 @@ function generateAssessmentDetails() {
         detailsHTML += `<div style="padding: 12px; background: white; border-radius: 8px;"><strong>Electric pottery kiln:</strong> Yes</div>`;
     }
     
-    detailsHTML += `<div style="padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid var(--primary-color);"><strong style="font-size: 17px;">Calculated Load:</strong> <span style="font-size: 20px; color: var(--primary-color); font-weight: 700;">${appState.finalAmps.toFixed(1)} Amps</span></div>`;
+    detailsHTML += `<div style="padding: 16px; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 8px; border: 2px solid var(--primary-color);"><strong style="font-size: 17px;">Approximate Load:</strong> <span style="font-size: 20px; color: var(--primary-color); font-weight: 700;">${appState.finalAmps.toFixed(1)} Amps</span></div>`;
     
     detailsHTML += '</div>';
     
@@ -400,27 +400,27 @@ function generateSummary() {
     } else {
         if (appState.serviceSize === 200) {
             if (appState.finalAmps > 200) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 170) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 100) {
             if (appState.finalAmps > 100) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 85) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         } else if (appState.serviceSize === 60) {
             if (appState.finalAmps > 60) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is required.`;
             } else if (appState.finalAmps > 50) {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is recommended to confirm.`;
             } else {
-                resultText = `Based on the information provided, the calculated load is ${ampsFormatted} amps, a safety survey is not required.`;
+                resultText = `Based on the information provided, the approximate load is ${ampsFormatted} amps, a safety survey is not required.`;
             }
         }
     }
