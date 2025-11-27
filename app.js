@@ -538,13 +538,20 @@ let currentPdfBlob = null;
 async function showPdfPreview() {
     const screen3 = document.getElementById('screen3');
     const previewScreen = document.getElementById('pdfPreviewScreen');
-    const embed = document.getElementById('pdfPreviewEmbed');
+    const iframe = document.getElementById('pdfPreviewFrame');
+    const loadingIndicator = document.getElementById('pdfLoadingIndicator');
     
     // Show loading state
     previewScreen.style.display = 'flex';
-    embed.style.display = 'none';
+    loadingIndicator.style.display = 'flex';
+    iframe.style.display = 'none';
     
     try {
+        // Check if jsPDF is loaded
+        if (!window.jspdf) {
+            throw new Error('jsPDF library not loaded');
+        }
+        
         // Generate PDF using html2canvas and jsPDF
         const { jsPDF } = window.jspdf;
         
@@ -552,19 +559,26 @@ async function showPdfPreview() {
         screen3.style.display = 'block';
         screen3.style.position = 'absolute';
         screen3.style.left = '-9999px';
+        screen3.style.top = '0';
+        
+        // Wait a moment for rendering
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // Capture the content
         const canvas = await html2canvas(screen3, {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             logging: false,
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            windowWidth: 850,
+            windowHeight: screen3.scrollHeight
         });
         
         // Hide screen3 again
         screen3.style.display = 'none';
         screen3.style.position = '';
         screen3.style.left = '';
+        screen3.style.top = '';
         
         // Create PDF
         const pdf = new jsPDF({
@@ -574,7 +588,7 @@ async function showPdfPreview() {
         });
         
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 210; // Letter width in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
@@ -583,9 +597,21 @@ async function showPdfPreview() {
         currentPdfBlob = pdf.output('blob');
         const pdfUrl = URL.createObjectURL(currentPdfBlob);
         
-        // Display PDF in embed
-        embed.src = pdfUrl;
-        embed.style.display = 'block';
+        // Check if mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            // On mobile, create a data URI and use iframe
+            const pdfDataUri = pdf.output('datauristring');
+            iframe.src = pdfDataUri;
+        } else {
+            // On desktop, use blob URL
+            iframe.src = pdfUrl;
+        }
+        
+        // Hide loading, show iframe
+        loadingIndicator.style.display = 'none';
+        iframe.style.display = 'block';
         
         // Setup button listeners
         document.getElementById('closePdfBtn').onclick = closePdfPreview;
@@ -593,7 +619,7 @@ async function showPdfPreview() {
         
     } catch (error) {
         console.error('Error generating PDF:', error);
-        alert('Error generating PDF preview');
+        alert('Error generating PDF preview: ' + error.message);
         closePdfPreview();
     }
 }
@@ -601,14 +627,14 @@ async function showPdfPreview() {
 // Close PDF Preview
 function closePdfPreview() {
     const previewScreen = document.getElementById('pdfPreviewScreen');
-    const embed = document.getElementById('pdfPreviewEmbed');
+    const iframe = document.getElementById('pdfPreviewFrame');
     
     previewScreen.style.display = 'none';
     
     // Clean up
-    if (embed.src) {
-        URL.revokeObjectURL(embed.src);
-        embed.src = '';
+    if (iframe.src) {
+        URL.revokeObjectURL(iframe.src);
+        iframe.src = '';
     }
     currentPdfBlob = null;
 }
@@ -618,7 +644,18 @@ async function savePdf() {
     if (!currentPdfBlob) return;
     
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const fileName = `Electrical_Service_Checklist_${appState.policyName || 'Report'}_${new Date().toISOString().split('T')[0]}.pdf`;
+    
+    // Build filename: PolicyName + 'Service Calculation' + InspectionDate
+    let fileName = '';
+    if (appState.policyName) {
+        fileName += appState.policyName.replace(/[^a-z0-9]/gi, '_');
+    }
+    fileName += fileName ? ' ' : '';
+    fileName += 'Service Calculation';
+    if (appState.inspectionDate) {
+        fileName += ' ' + appState.inspectionDate;
+    }
+    fileName += '.pdf';
     
     try {
         if (isMobile && navigator.share && navigator.canShare) {
@@ -645,6 +682,11 @@ async function savePdf() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
+        // Show toast notification on desktop
+        if (!isMobile) {
+            showToast('Check your downloads folder');
+        }
+        
     } catch (error) {
         console.error('Error saving PDF:', error);
         // Fallback to download
@@ -656,7 +698,33 @@ async function savePdf() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        
+        if (!isMobile) {
+            showToast('Check your downloads folder');
+        }
     }
+}
+
+// Show Toast Notification
+function showToast(message) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Hide and remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
 }
 
 // Navigate Between Screens

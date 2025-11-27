@@ -256,7 +256,8 @@
             <h2>PDF Preview</h2>
         </div>
         <div class="pdf-preview-body">
-            <embed id="pdfPreviewEmbed" type="application/pdf" class="pdf-preview-embed" />
+            <div id="pdfLoadingIndicator" class="pdf-loading">Generating PDF...</div>
+            <iframe id="pdfPreviewFrame" class="pdf-preview-frame" style="display: none;"></iframe>
         </div>
         <div class="pdf-preview-footer">
             <button id="savePdfBtn" class="btn btn-primary">Save</button>
